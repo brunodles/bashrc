@@ -59,22 +59,18 @@ else
 fi
 
 # SHOW GIT BRANCH
-branch="\$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')"
-if [[ -n $branch ]] ; then
-	PS1="$PS1 \w"
-else if [[ ${EUID} == 0 ]] ; then
-	PS1="$PS1 \W"
-else
-	PS1="$PS1 \w"
-fi fi
+branchCommand="\$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')"
+echo "Branch = $branchCommand"
+dirCommand=":\W"
 
+PS1="$PS1$dirCommand"
 if ${use_color} ; then
 	PS1="$PS1\[\033[00m\]"
 fi
+PS1="$PS1 $branchCommand"
 
-if [[ -n $branch ]] ; then
-	PS1="$PS1 $branch"
-fi
+unset dirCommand
+unset branchCommand
 
 PS1="$PS1\$ "
 
@@ -111,7 +107,7 @@ fi
 
 
 alias gs='git status'
-alias commit='git commit'
+alias commit='git commit -m'
 alias godev='git checkout dev'
 alias gomaster='git checkout master'
 alias pull='git pull origin master'
